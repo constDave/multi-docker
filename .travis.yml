@@ -1,0 +1,16 @@
+sudo: required
+services:
+  - docker
+
+before_install: 
+  - docker build -t denri88/docker-react -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true denri88/docker-react npm test
+
+after_success:
+  - docker build -t denri88/multi-client ./client
+  - docker build -t denri88/multi-nginx ./nginx
+  - docker build -t denri88/multi-server ./server
+  - docker build -t denri88/multi-worker ./worker
+  
